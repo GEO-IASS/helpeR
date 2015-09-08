@@ -1,0 +1,9 @@
+Package: helpeR
+Type: Package
+Title: My helper functions
+Version: 0.0-1
+Date: 2015-09-08
+Author: Benjamin mack
+Maintainer: Benjamin Mack <knecmab@gmail.com>
+Description: ...
+License: GPL-2
