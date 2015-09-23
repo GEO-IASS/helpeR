@@ -1,6 +1,6 @@
 #' @title doOrReadRDS
 #' @description Evaluate an expression and write the result 
-#' to disc or load it 
+#' to disc or load it if the file exists.
 #' if it already exists.  
 #' @param expr An expression.
 #' @param file The file where the result of the expression 
@@ -9,7 +9,7 @@
 #' and re-stored even if the file already exists?
 #' @param makedirs Should the directory \code{dirname(file)}
 #' be created (recursively) if it does not exist?
-#' @example
+#' @examples 
 #' \dontrun{
 #' x1 <- doOrReadRDS({a <- 1
 #'                    b <- 1
