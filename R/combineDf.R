@@ -24,19 +24,20 @@
 #' df2, or \code{NA} otherwise.
 #'@export
 combineDf <- function(dfNew, df, commonCols=NULL, 
-                      addCols=NULL, addNewRows=FALSE) {
+                      addCols=NULL, addNewRows=FALSE,
+                      verbose=TRUE) {
   if (is.null(commonCols))
     commonCols <- intersect(colnames(df), colnames(dfNew))
   idx.newInDf <- matchDf(dfNew[, commonCols], df[, commonCols])
   idx.na <- is.na(idx.newInDf)
-  if (is.null(newCols))
-    newCols <- setdiff(colnames(dfNew), commonCols) 
+  if (is.null(addCols))
+    addCols <- setdiff(colnames(dfNew), commonCols) 
   
   colnames.df.bak <- colnames(df)
-  for (cl in newCols)
+  for (cl in addCols)
     df <- cbind(df, NA)
-  colnames(df) <- c(colnames.df.bak, newCols)
-  df[idx.newInDf[!idx.na], newCols] <- dfNew[!idx.na, newCols]
+  colnames(df) <- c(colnames.df.bak, addCols)
+  df[idx.newInDf[!idx.na], addCols] <- dfNew[!idx.na, addCols]
   
   addNewRows.str <- ""
   if (addNewRows) {
@@ -53,13 +54,18 @@ combineDf <- function(dfNew, df, commonCols=NULL,
     addNewRows.str <- " and added to df."
   } 
   notInDfNew <- setdiff(1:nrow(df), idx.newInDf[!idx.na])
-  cat(sprintf(paste0("Rows in df not found in dfNew", 
-                     " (in attribute \"notInDfNew\"):\n%s\n"),
-              paste0(notInDfNew, collapse=", ")))
+  if (verbose & length(notInDfNew)>0)
+    cat(sprintf(paste0("Rows in df not found in dfNew", 
+                       " (in attribute \"notInDfNew\"):\n%s\n"),
+                paste0(notInDfNew, collapse=", ")))
   notInDf <- which(idx.na)
-  cat(sprintf(paste0("Rows in newDf not found in df%s", 
-                     " (in attribute \"notInDf\"):\n%s\n"),
-              addNewRows.str, paste0(notInDf, collapse=", ")))
+  if (verbose & length(notInDf)>0)
+    cat(sprintf(paste0("Rows in newDf not found in df%s", 
+                       " (in attribute \"notInDf\"):\n%s\n"),
+                addNewRows.str, paste0(notInDf, collapse=", ")))
+  attr(df, "notInDfNew") <- notInDfNew
+  attr(df, "notInDf") <- notInDf
+  
   return(df)
 }
   
