@@ -1,0 +1,65 @@
+#' @title combineDf
+#' @description Find matching columns of two data frames and 
+#' combine them to one data frame.
+#' @details 
+#' @param df1 A data frame.
+#' @param df2 A data frame with the same columns as df1.
+#' @param commonCols The columns that are present in both 
+#' data frames and which are used to identify corresponding  
+#' rows. If \code{NULL} the intersection of the column names
+#' of the two data frames is used. 
+#' @param addCols Columns in dfNew to be added to df. If \code{NULL} 
+#' all columns but the \code{commonCols} are added.
+#' @param addNewRows Add rows from \code{newDf} to \code{df} 
+#' even if there were no matches according to \code{commonCols}?
+#' @param ... Other atgumets that can be passed to \code{match}.
+#' @examples 
+#' \dontrun{
+#' df = data.frame(a=0:3, b=1:4, c=2:5, d=letters[1:4])
+#' dfNew <- cbind((df1+1)[3:1, 3:1], x=11:13, y=12:14)
+#' dfComb <- combineDf(dfNew, df)
+#' dfComb <- combineDf(dfNew, df, addNewRows=T)
+#' }
+#' @return For each row in df1 the (first) matching row in 
+#' df2, or \code{NA} otherwise.
+#'@export
+combineDf <- function(dfNew, df, commonCols=NULL, 
+                      addCols=NULL, addNewRows=FALSE) {
+  if (is.null(commonCols))
+    commonCols <- intersect(colnames(df), colnames(dfNew))
+  idx.newInDf <- matchDf(dfNew[, commonCols], df[, commonCols])
+  idx.na <- is.na(idx.newInDf)
+  if (is.null(newCols))
+    newCols <- setdiff(colnames(dfNew), commonCols) 
+  
+  colnames.df.bak <- colnames(df)
+  for (cl in newCols)
+    df <- cbind(df, NA)
+  colnames(df) <- c(colnames.df.bak, newCols)
+  df[idx.newInDf[!idx.na], newCols] <- dfNew[!idx.na, newCols]
+  
+  addNewRows.str <- ""
+  if (addNewRows) {
+    add2df <- dfNew[idx.na, , drop=F]
+    # reorder according to df
+    ans <- match(colnames(df), colnames(add2df))
+    add2df <- add2df[, ans[!is.na(ans)]]
+    
+    add2df.ext <- df[1, ]
+    add2df.ext[1, ] <- NA
+    add2df.ext[nrow(add2df), 1] <- NA # expand 
+    add2df.ext[, colnames(add2df)] <- add2df
+    df <- rbind(df, add2df.ext)
+    addNewRows.str <- " and added to df."
+  } 
+  notInDfNew <- setdiff(1:nrow(df), idx.newInDf[!idx.na])
+  cat(sprintf(paste0("Rows in df not found in dfNew", 
+                     " (in attribute \"notInDfNew\"):\n%s\n"),
+              paste0(notInDfNew, collapse=", ")))
+  notInDf <- which(idx.na)
+  cat(sprintf(paste0("Rows in newDf not found in df%s", 
+                     " (in attribute \"notInDf\"):\n%s\n"),
+              addNewRows.str, paste0(notInDf, collapse=", ")))
+  return(df)
+}
+  
