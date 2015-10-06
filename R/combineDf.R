@@ -25,9 +25,29 @@
 #'@export
 combineDf <- function(dfNew, df, commonCols=NULL, 
                       addCols=NULL, addNewRows=FALSE,
-                      verbose=TRUE) {
-  if (is.null(commonCols))
+                      suffixNewCols=".new", verbose=TRUE) {
+  if (is.null(commonCols)) {
     commonCols <- intersect(colnames(df), colnames(dfNew))
+  } else {
+    colsRename <- intersect(
+      colnames(df)[!colnames(df) %in% commonCols],
+      colnames(dfNew)[!colnames(dfNew) %in% commonCols])
+    
+    if (verbose & length(colsRename) > 0) {
+      cat(paste0("Adding suffix \"", suffixNewCols, 
+                 "\" to new columns ",
+                 "(from \"dfNew\") with names already ",
+                 "existing in \"df\" ",
+                 "(but not \"commonCols\"):\n",
+                 paste0(colsRename, collapse=", ")))
+    }
+    for (i in seq_along(colnames(dfNew))) {
+      cn <- colnames(dfNew)[i]
+      colnames(dfNew)[i] <- ifelse(cn %in% colsRename,
+                                    paste0(cn, suffixNewCols), cn)
+    }
+    
+  }
   idx.newInDf <- matchDf(dfNew[, commonCols], df[, commonCols])
   idx.na <- is.na(idx.newInDf)
   if (is.null(addCols))
@@ -40,7 +60,7 @@ combineDf <- function(dfNew, df, commonCols=NULL,
   df[idx.newInDf[!idx.na], addCols] <- dfNew[!idx.na, addCols]
   
   addNewRows.str <- ""
-  if (addNewRows) {
+  if (addNewRows & any(idx.na)) {
     add2df <- dfNew[idx.na, , drop=F]
     # reorder according to df
     ans <- match(colnames(df), colnames(add2df))
@@ -68,4 +88,3 @@ combineDf <- function(dfNew, df, commonCols=NULL,
   
   return(df)
 }
-  
