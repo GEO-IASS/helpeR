@@ -1,7 +1,7 @@
-#' @title combineDf
+#' @name combineDf
+#' @title Combine data frames by matching specific columns.
 #' @description Find matching columns of two data frames and 
 #' combine them to one data frame.
-#' @details 
 #' @param df1 A data frame.
 #' @param df2 A data frame with the same columns as df1.
 #' @param commonCols The columns that are present in both 

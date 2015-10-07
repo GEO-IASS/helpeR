@@ -4,7 +4,7 @@
 \alias{doOrReadRDS}
 \title{doOrReadRDS}
 \usage{
-doOrReadRDS(expr, file, overwrite = FALSE, makedirs = TRUE)
+doOrReadRDS(expr, file, overwrite = FALSE, mkdir = TRUE)
 }
 \arguments{
 \item{expr}{An expression.}
