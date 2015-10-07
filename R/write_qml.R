@@ -2,7 +2,7 @@
 #' 
 #' @title Write a raster qml file. 
 #' 
-#' @description Given a vector of colors and breaks a styles 
+#' @description Given a vector of colors and breaks (and optional labels) a qml is created.
 #' 
 #' @param colors a vector of colors
 #' @param values a vector of values
@@ -12,10 +12,6 @@
 #' @references As a template for this function a nice post available online helped a lot. 
 #' This post describes the creation of a qml legend file for shape files:   
 #' \url{http://pvanb.wordpress.com/2012/07/02/from-attribute-table-to-qgis-style-file-step-2/}
-#' @examples
-#' \dontrun{
-#' ### to do
-#' }
 #' @export
 write_qml <- function (colors, values, labels=NULL, filename) {
   
