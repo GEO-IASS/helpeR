@@ -54,9 +54,11 @@ get_limit_params_given_optimum <- function(x, params=NULL, optcrit=NULL) {
     params.mx[[param]] <- unique(x[idx.mx, param])
     if (min(params.mx[[param]]) == u.params[[param]][1]) {
       params.mx.limit[[param]] <- u.params[[param]][1]
+      attr(params.mx.limit[[param]], "limit") <- "lower"
     }
     if (max(params.mx[[param]]) == u.params[[param]][length(u.params[[param]])]) {
       params.mx.limit[[param]] <- u.params[[param]][length(u.params[[param]])]
+      attr(params.mx.limit[[param]], "limit") <- "upper"
     }
   }
   return(params.mx.limit)
