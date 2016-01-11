@@ -23,4 +23,14 @@ A two-class table or ConfusionMatrix depending on the input.
 \description{
 ...
 }
+\examples{
+\dontrun{
+cm <- rbind(c(8, 2, 4),
+            c(1, 7, 0),
+            c(1, 1, 6))
+rownames(cm) <- colnames(cm) <- c("a", "b", "c")
+cm <- as.table(cm)
+convert_to_bin_confmat(cm, "c")
+}
+}
 
