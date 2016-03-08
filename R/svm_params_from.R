@@ -9,19 +9,28 @@
 #'@param from 
 #'@return List of parameters as suggsted in the references.
 #'@export
-svm_params_from <- function(from="Hsu") {
-  if (from == "Hsu") {
-    rtrn <- list(
-      C=2^seq(-5, 15, 2),
-      gamma=2^seq(-15, 3, 2),
-      sigma=sort(rbf_gamma2sigma(2^seq(-15, 3, 2)))
+svm_params_from <- function(from="Hsu", svmtype="svm") {
+  
+  params <- list(
+    svm = list(
+      Hsu = list(
+        C=2^seq(-5, 15, 2),
+        gamma=2^seq(-15, 3, 2),
+        sigma=sort(rbf_gamma2sigma(2^seq(-15, 3, 2)))
+      ),
+      BenHur=list(
+        C=10^c(-2:5),
+        gamma=10^c(-5:1),
+        sigma=sort(rbf_gamma2sigma(10^c(-5:1)))
+      )
     )
-  } else if (from == "Ben-Hur") {
-    rtrn <- list(
-      C=10^c(-2:5),
-      gamma=10^c(-5:1),
-      sigma=sort(rbf_gamma2sigma(10^c(-5:1)))
-    )
+  )   
+  if (is.null(from) & !is.null(svmtype)) {
+    rtrn <- params[[svmtype]]
+  } else if (!is.null(from) & !is.null(svmtype)) {
+    rtrn <- params[[svmtype]][[from]]
+  } else {
+    rtrn <- params 
   }
   return(rtrn)
 }
