@@ -4,7 +4,7 @@
 \alias{svm_params_from}
 \title{Get the defautl SVM Parameters from ...}
 \usage{
-svm_params_from(from = "Hsu")
+svm_params_from(from = "Hsu", svmtype = "svm")
 }
 \arguments{
 \item{from}{}
