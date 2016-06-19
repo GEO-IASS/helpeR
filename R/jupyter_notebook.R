@@ -18,7 +18,7 @@ jupyter_notebook <- function(env="r-oneClass", bdir=getwd(),
   wd_bak <- getwd()
   setwd(bdir)
   cat("CALLING from ", getwd(), "\n", call, "\n")
-  system(call, wait=wait, invisible=FALSE, ...)
+  system(call, wait=wait, invisible=invisible, ...)
   setwd(wd_bak)
   return(NULL)
 }
